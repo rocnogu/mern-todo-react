@@ -1,6 +1,6 @@
 import axios from "axios";
 //
-const url = "http://localhost:6789/todos";
+const url = "https://mern-todo-rocnogu.herokuapp.com/todos";
 //
 export const readTodo = () => axios.get(url);
 export const createTodo = (newTodo) => axios.post(url, newTodo);
