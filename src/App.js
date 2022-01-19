@@ -1,4 +1,3 @@
-import "./App.css";
 import Preloader from "./components/Preloader";
 import { useEffect, useState } from "react";
 import {
@@ -26,6 +25,7 @@ export default function App() {
   useEffect(() => {
     const fetchData = async () => {
       const result = await readTodos();
+      console.log(result);
       setTodos(result);
     };
     fetchData();
@@ -57,12 +57,14 @@ export default function App() {
       clear();
     }
   };
-  ////////////////
+  /// remove item
   const removeTodo = async (id) => {
     await deleteTodo(id);
-    const todosCopy = [...todos];
-    todosCopy.filter((todo) => todo._id !== id);
+    // let todosCopy = [...todos];
+    let todosCopy = todos.filter((item) => item._id !== id);
     setTodos(todosCopy);
+    console.log(todosCopy);
+
     clear();
   };
   ////////////////
@@ -70,7 +72,6 @@ export default function App() {
   return (
     <div className="App">
       <h1>React ToDo App</h1>
-      <p>removeTodo dosnt re render the list</p>
       <div className="container">
         <div className="row">
           <form className="col s12" onSubmit={handleSubmit}>
@@ -115,34 +116,32 @@ export default function App() {
           {!todos ? (
             <Preloader />
           ) : todos.length > 0 ? (
-            <ul className="collection">
-              {todos.map((task) => (
-                <li
-                  className="collection-item "
-                  key={task._id}
-                  onClick={() => setCurrentId(task._id)}
-                >
-                  <div>
-                    <h5>{task.title}</h5>
-                    <p>
-                      {task.content}
-                      <a
-                        href="#!"
-                        className="secondary-content"
-                        onClick={() => removeTodo(task._id)}
-                      >
+            <div>
+              <ul className="collection">
+                {todos.map((task) => (
+                  <li className="collection-item " key={task._id}>
+                    <div onClick={() => setCurrentId(task._id)}>
+                      <h5>{task.title}</h5>
+                      <p>{task.content}</p>
+                    </div>
+                    <div>
+                      <a href="#!">
                         <i
                           className="material-icons"
-                          onClick={() => removeTodo(task._id)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            removeTodo(task._id);
+                          }}
                         >
                           delete
                         </i>
                       </a>
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ) : (
             <div>
               <h3>Here are no tasks</h3>
